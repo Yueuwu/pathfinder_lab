@@ -3,10 +3,13 @@ from tkinter import ttk
 import random
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
+from pathfinding.finder.bi_a_star import BiAStarFinder
 from pathfinding.finder.dijkstra import DijkstraFinder
 from pathfinding.finder.best_first import BestFirst
 from pathfinding.finder.breadth_first import BreadthFirstFinder
 import pathfinding.core.heuristic as heuristic
+from pathfinding.finder.ida_star import IDAStarFinder
+
 from lee_algorithm import LeeFinder
 
 
@@ -37,7 +40,9 @@ combobox = ttk.Combobox(window,
                                 'Алгоритм Дейкстры (Dijkstra)',
                                 'Поиск по первому наилучшему совпадению (Best-First)',
                                 'Поиск в ширину (Breadth First Search (BFS))',
-                                'Волновой алгоритм / Алгоритм Ли(Lee Algorithm)'])
+                                'Двунаправленный A* (Bi-directional A*)',
+                                'A* с итеративным углублением (Iterative Deeping A* (IDA*))',
+                                'Волновой алгоритм / Алгоритм Ли(Lee Algorithm)',])
 combobox.place(width=w - w // 2, height=bh, x=bw + bw // 2, y=h - bh)
 combobox.current(0)
 
@@ -179,7 +184,6 @@ def clear_path_cells():
 
 
 def button_path_finding():
-    global finder
     clear_path_cells()  # очистка старого пути
     # если указаны начальная и конечная точки
     if start_point is not None and end_point is not None:
@@ -210,9 +214,13 @@ def button_path_finding():
     elif combobox.current() == 3:
         finder = BreadthFirstFinder(diagonal_movement=diagonal.get())
     elif combobox.current() == 4:
+        finder = BiAStarFinder(diagonal_movement=diagonal.get())
+    elif combobox.current() == 5:
+        finder = IDAStarFinder(diagonal_movement=diagonal.get())
+    elif combobox.current() == 6:
         finder = LeeFinder()
 
-    if 0 <= combobox.current() <= 3:
+    if 0 <= combobox.current() <= 5:
         grid = Grid(matrix=lab)
         start = grid.node(start_coord['x'], start_coord['y'])
         end = grid.node(end_coord['x'], end_coord['y'])
@@ -224,7 +232,7 @@ def button_path_finding():
     path, runs = finder.find_path(start, end, grid)
 
     print(combobox.get())  # название алгоритма
-    if 0 <= combobox.current() <= 3:
+    if 0 <= combobox.current() <= 5:
     # вывод лабиринта и найденного пути в символьном виде
         print(grid.grid_str(path=path, start=start, end=end))
     # длина пути - путь минус начальная и конечная точки

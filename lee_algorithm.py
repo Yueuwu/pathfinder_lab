@@ -1,5 +1,8 @@
 class LeeFinder():
 
+    def __init__(self, isDiagonal):
+        self.diag_move = isDiagonal
+
     def find_path(self, start, end, grid):
 
         EMPTY = 1
@@ -14,8 +17,12 @@ class LeeFinder():
 
         path = []
         runs = 0
-        nodes = 4
-        delta = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+        if self.diag_move:
+            nodes = 8
+            delta = [(1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1)]
+        else:
+            nodes = 4
+            delta = [(1, 0), (0, 1), (-1, 0), (0, -1)]
         grid[sy][sx] = 2
         w = 2
 
@@ -32,9 +39,10 @@ class LeeFinder():
                                 grid[ny][nx] = w + 1
                                 runs += 1
             w += 1
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if stop_wave or grid[ey][ex] != EMPTY: break
         if stop_wave: return [], runs
-            #ВОЗМОЖНО СТОИТ СДВИНУТЬ ВЛЕВО
+
         length = grid[ey][ex]
         x = ex
         y = ey

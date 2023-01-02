@@ -182,7 +182,6 @@ def clear_path_cells():
             if labyrinth[e][q].type == 'path_element':
                 labyrinth[e][q].empty()
 
-
 def button_path_finding():
     clear_path_cells()  # очистка старого пути
     # если указаны начальная и конечная точки
@@ -218,7 +217,7 @@ def button_path_finding():
     elif combobox.current() == 5:
         finder = IDAStarFinder(diagonal_movement=diagonal.get())
     elif combobox.current() == 6:
-        finder = LeeFinder()
+        finder = LeeFinder(diagonal.get())
 
     if 0 <= combobox.current() <= 5:
         grid = Grid(matrix=lab)
